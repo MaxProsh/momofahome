@@ -79,8 +79,22 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
   margin: 0;
   padding: 0;
 }
-.directions__list li + li {
+.directions__list > li + li {
   border-top: 1px solid var(--line);
+}
+.directions__sublist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 20px;
+  margin: 0;
+  padding: 0 14px 11px 33px;
+  list-style: disc;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.directions__sublist li::marker {
+  color: var(--olive);
 }
 .directions__option {
   display: block;
@@ -355,15 +369,29 @@ body:has(.offer-popup[open]) .catalog-widget { display: none; }
         <ul class="directions__list">
           <li>
             <button type="button" class="directions__option" data-direction-index="0" aria-pressed="true" aria-describedby="direction-description-0">Подарочные наборы</button>
+            <ul class="directions__sublist">
+              <li>Подарочные игрушки</li>
+              <li>Подарки с посудой</li>
+              <li>Другие варианты</li>
+            </ul>
           </li>
           <li>
             <button type="button" class="directions__option" data-direction-index="1" aria-pressed="false" aria-describedby="direction-description-1">Столовый текстиль</button>
           </li>
           <li>
             <button type="button" class="directions__option" data-direction-index="2" aria-pressed="false" aria-describedby="direction-description-2">Вышивка с логотипом</button>
+            <ul class="directions__sublist">
+              <li>По индивидуальным эскизам</li>
+            </ul>
           </li>
           <li>
             <button type="button" class="directions__option" data-direction-index="3" aria-pressed="false" aria-describedby="direction-description-3">Подарочная упаковка</button>
+            <ul class="directions__sublist">
+              <li>Музыкальные коробки</li>
+              <li>Подарочные чемоданчики</li>
+              <li>Коробки</li>
+              <li>Пакеты</li>
+            </ul>
           </li>
         </ul>
         <div class="directions__descriptions">
