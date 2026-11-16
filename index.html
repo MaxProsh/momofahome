@@ -223,6 +223,43 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
 }
 @media (max-width: 450px) { .quiz__answers { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .quiz__screen { animation: none; } .quiz__answer { transition: none; } }
+.offer-popup {
+  position: fixed;
+  inset: 0;
+  width: min(460px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 30px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 12px 32px #21231a24;
+  z-index: 20;
+}
+.offer-popup::backdrop { background: #21231a55; }
+.offer-popup h2 { padding-right: 30px; font-size: clamp(23px, 4vw, 34px); }
+.offer-popup p { margin: 12px 0 18px; color: var(--muted); }
+.offer-popup__close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 24px Inter, sans-serif;
+  cursor: pointer;
+}
+.offer-popup :focus-visible { outline: 2px solid var(--olive); outline-offset: 3px; }
+.offer-popup[data-compact] {
+  inset: auto 0 max(12px, env(safe-area-inset-bottom));
+  margin: 0 auto;
+  padding: 15px 16px;
+}
+.offer-popup[data-compact] h2 { font-size: 20px; }
+.offer-popup[data-compact] p { margin: 8px 0 12px; font-size: 13px; }
+.offer-popup[data-compact] .button { min-height: 44px; }
 </style></head>
 <body>
 <header class="mast"><div class="wrap head"><img class="logo" src="assets/logo.svg" alt="MOMO FOR HOME"><nav><a href="#gifts">Примеры</a><a href="#brand">Брендирование</a><a href="#process">Как заказать</a><a href="#faq">Вопросы</a></nav><a class="button alt" href="#contact">Оставить заявку</a></div></header>
@@ -590,6 +627,79 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
     scheduleAutoplay();
   }, { threshold: 0.35 });
   galleryObserver.observe(directions.querySelector('.directions__grid'));
+</script>
+<dialog class="offer-popup" id="offer-popup" aria-labelledby="offer-title" aria-describedby="offer-description">
+  <button class="offer-popup__close" type="button" aria-label="Закрыть предложение" autofocus>×</button>
+  <h2 id="offer-title">Не спешите уходить — подберём подарки под ваш бюджет</h2>
+  <p id="offer-description">Скажите, сколько подарков нужно. Предложим варианты состава, вышивки и упаковки в пределах вашего бюджета.</p>
+  <a class="button" href="#contact">Получить подборку</a>
+</dialog>
+
+<script>
+(() => {
+  const popup = document.querySelector('#offer-popup');
+  const examples = document.querySelector('#gifts');
+  const examplesGrid = examples.querySelector('.grid3');
+  const quiz = document.querySelector('#catalog-quiz');
+  const contact = document.querySelector('#contact');
+  const form = document.querySelector('#quote-form');
+  const compact = matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)');
+  const openedAt = performance.now();
+  const storageKey = 'momo-offer-seen';
+  let shown = false;
+  let sawExamples = false;
+  let reviewedExamples = false;
+
+  try { shown = sessionStorage.getItem(storageKey) === '1'; } catch {}
+
+  const inView = (section) => {
+    const bounds = section.getBoundingClientRect();
+    return bounds.top < innerHeight && bounds.bottom > 0;
+  };
+
+  function show() {
+    if (shown || document.hidden || inView(quiz) || inView(contact)) return;
+    if (quiz.contains(document.activeElement) || form.contains(document.activeElement)) return;
+
+    popup.toggleAttribute('data-compact', compact.matches);
+    if (compact.matches) {
+      const previousFocus = document.activeElement;
+      popup.show();
+      if (previousFocus === document.body) popup.querySelector('button').blur();
+      else previousFocus?.focus({ preventScroll: true });
+    } else {
+      popup.showModal();
+    }
+    shown = true;
+    try { sessionStorage.setItem(storageKey, '1'); } catch {}
+  }
+
+  function onScroll() {
+    if (shown) return;
+    if (inView(examples)) sawExamples = true;
+    if (sawExamples && examplesGrid.getBoundingClientRect().bottom <= innerHeight * 0.8) {
+      reviewedExamples = true;
+    }
+    if (compact.matches && reviewedExamples && performance.now() - openedAt >= 20000) show();
+  }
+
+  popup.querySelector('button').addEventListener('click', () => popup.close());
+  popup.querySelector('a').addEventListener('click', (event) => {
+    event.preventDefault();
+    popup.close();
+    window.location.hash = 'contact';
+    form.elements.namedItem('name').focus({ preventScroll: true });
+  });
+  document.addEventListener('keydown', (event) => {
+    if (popup.open && compact.matches && event.key === 'Escape') popup.close();
+  });
+  document.addEventListener('mouseout', (event) => {
+    if (!compact.matches && sawExamples && !event.relatedTarget && event.clientY <= 0) show();
+  });
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.setTimeout(onScroll, 20000);
+  onScroll();
+})();
 </script>
 <script src="catalog-quiz.js" defer></script>
 </body></html>
