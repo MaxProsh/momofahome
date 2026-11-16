@@ -135,26 +135,29 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
   }
 }
 
-.partner-cases {
-  border-top: 1px solid var(--line);
-}
-.partner-case {
+.partner-cases { border-top: 1px solid var(--line); }
+.partner-cases__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 3vw, 32px);
   margin-top: clamp(22px, 3vw, 42px);
 }
-.partner-case__photo img {
-  aspect-ratio: 3 / 2;
-  height: auto;
+.partner-case {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--white);
 }
-.partner-case__photo figcaption {
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.partner-case h3 {
-  font-size: clamp(24px, 3vw, 39px);
-}
-.partner-case .button {
-  margin-top: 22px;
+.partner-case__photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; }
+.partner-case__photos img { aspect-ratio: 4 / 5; height: auto; }
+.partner-case__copy { padding: clamp(16px, 3vw, 27px); }
+.partner-case__copy .eyebrow { margin-bottom: 8px; }
+.partner-case h3 { font-size: clamp(23px, 2.6vw, 35px); }
+.partner-case__copy .lead { margin-top: 10px; }
+.partner-cases__action { margin-top: 24px; }
+@media (max-width: 680px) {
+  .partner-cases__grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 .field-hint{font-weight:400;color:var(--muted)}
@@ -381,18 +384,53 @@ body:has(.offer-popup[open]) .catalog-widget { display: none; }
 <section class="section partner-cases" id="partner-cases" aria-labelledby="partner-cases-title">
   <div class="wrap">
     <h2 id="partner-cases-title">Подарки, которые мы создали для партнёров</h2>
-    <article class="split partner-case">
-      <figure class="partner-case__photo">
-        <img src="assets/linen.jpg" alt="Светлая скатерть MOMO в сервировке" loading="lazy">
-        <figcaption>Фото текстиля MOMO для иллюстрации</figcaption>
-      </figure>
-      <div>
-        <p class="eyebrow">Пример оформления кейса</p>
-        <h3>Альфа-Банк · Скатерти с логотипом</h3>
-        <p class="lead">Пример корпоративного подарка — скатерти с вышитым логотипом компании.</p>
-        <a class="button alt" href="#contact">Обсудить похожий заказ</a>
-      </div>
-    </article>
+    <div class="partner-cases__grid">
+      <article class="partner-case">
+        <div class="partner-case__photos">
+          <img src="assets/cases/alfa-table.jpg" alt="Полосатая скатерть и белая салфетка с эмблемой «Альфа Дача»" loading="lazy" decoding="async">
+          <img src="assets/cases/alfa-cushion.jpg" alt="Красная подушка с логотипом Альфа-Банка" loading="lazy" decoding="async">
+        </div>
+        <div class="partner-case__copy">
+          <p class="eyebrow">Альфа-Банк</p>
+          <h3>Текстиль для «Альфа Дачи»</h3>
+          <p class="lead">Полосатая скатерть, белые салфетки с красной эмблемой «Альфа Дача» и красная подушка с логотипом Альфа-Банка.</p>
+        </div>
+      </article>
+      <article class="partner-case">
+        <div class="partner-case__photos">
+          <img src="assets/cases/emblem-box.jpg" alt="Тёмно-синий текстиль с вышитым гербом в коробке" loading="lazy" decoding="async">
+          <img src="assets/cases/emblem-accessories.jpg" alt="Стёганые аксессуары и серый текстиль с вышитыми гербами" loading="lazy" decoding="async">
+        </div>
+        <div class="partner-case__copy">
+          <p class="eyebrow">Подарочный комплект</p>
+          <h3>Текстиль и аксессуары с гербом</h3>
+          <p class="lead">Тёмно-синий текстиль в подарочной коробке, стёганые аксессуары на молнии и серое изделие с бахромой. На каждом предмете — вышитый герб.</p>
+        </div>
+      </article>
+      <article class="partner-case">
+        <div class="partner-case__photos">
+          <img src="assets/cases/judo-suit.jpg" alt="Тёмно-синий спортивный костюм с эмблемой на манекене" loading="lazy" decoding="async">
+          <img src="assets/cases/judo-embroidery.jpg" alt="Вышитая эмблема Федерации дзюдо России крупным планом" loading="lazy" decoding="async">
+        </div>
+        <div class="partner-case__copy">
+          <p class="eyebrow">Федерация дзюдо России</p>
+          <h3>Спортивный костюм с эмблемой</h3>
+          <p class="lead">Тёмно-синий комплект из куртки на молнии и брюк. На груди — вышитая эмблема Федерации дзюдо России.</p>
+        </div>
+      </article>
+      <article class="partner-case">
+        <div class="partner-case__photos">
+          <img src="assets/cases/moscow-box.jpg" alt="Две белые салфетки с красной вышивкой в коробке" loading="lazy" decoding="async">
+          <img src="assets/cases/moscow-embroidery.jpg" alt="Красная вышивка на белой салфетке крупным планом" loading="lazy" decoding="async">
+        </div>
+        <div class="partner-case__copy">
+          <p class="eyebrow">«Сделано в Москве» × ЗАГС</p>
+          <h3>Салфетки с красной вышивкой</h3>
+          <p class="lead">Две белые салфетки в подарочной коробке. На каждой — круглая красная вышивка с надписью «С любовью, Сделано в Москве × ЗАГС».</p>
+        </div>
+      </article>
+    </div>
+    <a class="button alt partner-cases__action" href="#contact">Обсудить похожий заказ</a>
   </div>
 </section>
 <section class="partner-logos" id="partner-logos" aria-labelledby="partner-logos-title">
