@@ -191,9 +191,10 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
   .partner-logos__group[aria-hidden] { display: none; }
 }
 .quiz { background: #f2f3ea; border-block: 1px solid var(--line); }
-.quiz__layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .95fr); gap: clamp(24px, 5vw, 72px); align-items: center; }
+.quiz__layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .95fr); grid-template-areas: "intro book" "panel book"; gap: 24px clamp(24px, 5vw, 72px); align-items: center; }
+.quiz__intro { grid-area: intro; align-self: end; }
 .quiz h2 { font-size: clamp(30px, 3.5vw, 51px); }
-.quiz__panel { margin-top: 24px; padding: clamp(16px, 3vw, 27px); background: var(--white); border: 1px solid var(--line); }
+.quiz__panel { grid-area: panel; align-self: start; padding: clamp(16px, 3vw, 27px); background: var(--white); border: 1px solid var(--line); }
 .quiz__panel h3 { font-size: clamp(21px, 2.3vw, 28px); margin-bottom: 14px; }
 .quiz__step { color: var(--olive); font-size: 13px; margin-bottom: 8px; }
 .quiz progress { display: block; width: 100%; height: 7px; accent-color: var(--olive); margin-bottom: 18px; }
@@ -206,7 +207,7 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
 .quiz__actions button:disabled { opacity: .55; cursor: default; }
 .quiz__screen { animation: quiz-answer-in .24s ease-out both; }
 @keyframes quiz-answer-in { from { opacity: 0; transform: translateY(6px); } }
-.quiz__book { padding: clamp(15px, 3vw, 32px); background: #ded8cb; }
+.quiz__book { grid-area: book; padding: clamp(15px, 3vw, 32px); background: #ded8cb; }
 .quiz__spread { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); aspect-ratio: 1.42; transform: rotate(-3deg); box-shadow: 2px 12px 22px #332b2544; }
 .quiz__page { position: relative; display: flex; flex-direction: column; gap: 8px; min-width: 0; min-height: 0; padding: 9%; background: #fffdfa; }
 .quiz__page:first-child { box-shadow: inset -11px 0 16px -14px #392d27; }
@@ -216,8 +217,9 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
 .quiz__page strong { font-size: clamp(10px, 1.35vw, 19px); line-height: 1.15; }
 .quiz__book figcaption { margin: 20px 0 0; font-size: 12px; color: #524b42; }
 @media (max-width: 860px) {
-  .quiz__layout { grid-template-columns: minmax(0, 1fr); }
-  .quiz__book { width: min(100%, 490px); justify-self: center; }
+  .quiz__layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "intro" "book" "panel"; gap: 16px; }
+  .quiz__book { width: min(100%, 220px); padding: 12px; justify-self: center; }
+  .quiz__book figcaption { margin-top: 10px; text-align: center; }
 }
 @media (max-width: 450px) { .quiz__answers { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .quiz__screen { animation: none; } .quiz__answer { transition: none; } }
@@ -339,14 +341,9 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
 </section>
 <section class="section quiz" id="catalog-quiz" aria-labelledby="catalog-quiz-title">
   <div class="wrap quiz__layout">
-    <div>
+    <div class="quiz__intro">
       <h2 id="catalog-quiz-title">Получите полный каталог корпоративных подарков и наборов 2026–2027</h2>
       <p class="lead">Ответьте на 4 коротких вопроса о заказе и оставьте удобный контакт.</p>
-      <div class="quiz__panel">
-        <p class="quiz__step" id="catalog-quiz-step"></p>
-        <progress max="4" value="0" aria-label="Прогресс квиза"></progress>
-        <div data-quiz-content></div>
-      </div>
     </div>
     <figure class="quiz__book">
       <div class="quiz__spread">
@@ -362,6 +359,11 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
       </div>
       <figcaption>Макет разворота каталога MOMO</figcaption>
     </figure>
+    <div class="quiz__panel">
+      <p class="quiz__step" id="catalog-quiz-step"></p>
+      <progress max="4" value="0" aria-label="Прогресс квиза"></progress>
+      <div data-quiz-content></div>
+    </div>
   </div>
 </section>
 <section class="section steps-section" id="process"><div class="wrap"><p class="eyebrow">Как заказать</p><h2>От заявки до готовых подарков</h2><div class="steps">
