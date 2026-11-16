@@ -287,6 +287,45 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
 .offer-popup[data-compact] h2 { font-size: 20px; }
 .offer-popup[data-compact] p { margin: 8px 0 12px; font-size: 13px; }
 .offer-popup[data-compact] .button { min-height: 44px; }
+.catalog-widget {
+  position: fixed;
+  inset: auto max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) auto;
+  z-index: 15;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  max-width: calc(100% - 32px);
+  padding: 9px 16px 9px 10px;
+  border: 1px solid #d4c5af;
+  border-radius: 999px;
+  background: #f4ebde;
+  color: var(--olive);
+  box-shadow: 0 4px 18px #372b1d1c;
+  font: 600 14px/1.25 Inter, sans-serif;
+}
+.catalog-widget[hidden],
+body:has(.offer-popup[open]) .catalog-widget { display: none; }
+.catalog-widget:hover { background: #ebe0cf; }
+.catalog-widget:focus-visible { outline: 2px solid var(--olive); outline-offset: 3px; }
+.catalog-widget__icon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  border-radius: 50%;
+  background: #e8dcc9;
+}
+@media (max-width: 680px) {
+  .catalog-widget {
+    inset: auto max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) auto;
+    min-height: 44px;
+    gap: 7px;
+    padding: 6px 12px 6px 7px;
+    font-size: 12px;
+  }
+  .catalog-widget__icon { width: 26px; height: 26px; }
+}
 </style></head>
 <body>
 <header class="mast"><div class="wrap head"><img class="logo" src="assets/logo.svg" alt="MOMO FOR HOME"><nav><a href="#gifts">Примеры</a><a href="#brand">Брендирование</a><a href="#process">Как заказать</a><a href="#faq">Вопросы</a></nav><a class="button alt" href="#contact">Оставить заявку</a></div></header>
@@ -406,7 +445,7 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
 <section class="section quiz" id="catalog-quiz" aria-labelledby="catalog-quiz-title">
   <div class="wrap quiz__layout">
     <div class="quiz__intro">
-      <h2 id="catalog-quiz-title">Получите полный каталог корпоративных подарков и наборов 2026–2027</h2>
+      <h2 id="catalog-quiz-title" tabindex="-1">Получите полный каталог корпоративных подарков и наборов 2026–2027</h2>
       <p class="lead">Ответьте на 4 коротких вопроса о заказе и оставьте удобный контакт.</p>
     </div>
     <figure class="quiz__book">
@@ -659,6 +698,32 @@ button,input,textarea,select{font-family:Inter,Arial,sans-serif}
     scheduleAutoplay();
   }, { threshold: 0.35 });
   galleryObserver.observe(directions.querySelector('.directions__grid'));
+</script>
+<a class="catalog-widget" href="#catalog-quiz">
+  <svg class="catalog-widget__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M12 6c-3-2-6-2-9-1v13c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v13M6 9l3 .4M6 13l3 .4m6-4 3-.4m-3 4 3-.4"/>
+  </svg>
+  <span>Получить актуальный каталог</span>
+</a>
+<script>
+(() => {
+  const widget = document.querySelector('.catalog-widget');
+  const quiz = document.querySelector('#catalog-quiz');
+  const heading = document.querySelector('#catalog-quiz-title');
+  const visibleSections = new Set();
+
+  widget.addEventListener('click', () => heading.focus({ preventScroll: true }));
+
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) visibleSections.add(entry.target);
+      else visibleSections.delete(entry.target);
+    }
+    widget.hidden = visibleSections.size > 0;
+  });
+  observer.observe(quiz);
+  observer.observe(document.querySelector('#contact'));
+})();
 </script>
 <dialog class="offer-popup" id="offer-popup" aria-labelledby="offer-title" aria-describedby="offer-description">
   <button class="offer-popup__close" type="button" aria-label="Закрыть предложение" autofocus>×</button>
